@@ -1,0 +1,12 @@
+{
+    "extends": "@tsconfig/node22/tsconfig.json",
+    "compilerOptions": {
+        "sourceMap": true,
+        "outDir": "dist",
+        "baseUrl": "src",
+        "noImplicitAny": true,
+        "resolveJsonModule": true
+    },
+    "include": ["src/**/*"],
+    "exclude": []
+}
