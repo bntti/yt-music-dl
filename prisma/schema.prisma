@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Song {
+  id         String     @id
+  url        String     @unique
+  uploader   String
+  ytTitle    String
+  length     Int
+  downloaded Boolean
+  filename   String? // Only present when downloaded is true
+  imageUrl   String? // Only present when downloaded is true
+  renamed    Boolean? // Only present when downloaded is true
+  artist     String? // Only present when renamed is true
+  title      String? // Only present when renamed is true
+  playlists  Playlist[]
+}
+
+model Playlist {
+  id       String  @id
+  url      String  @unique
+  title    String
+  imageUrl String?
+  dirName  String
+  songs    Song[]
+}

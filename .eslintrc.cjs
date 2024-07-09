@@ -24,6 +24,7 @@ module.exports = {
         'no-unused-vars': 'off', // Replaced by @typescript-eslint rule
         'no-constant-condition': ['error', { checkLoops: false }],
         'dot-notation': 'warn',
+        'valid-jsdoc': 'off',
 
         '@typescript-eslint/switch-exhaustiveness-check': 'error',
         '@typescript-eslint/no-use-before-define': 'error',
