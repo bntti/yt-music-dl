@@ -8,7 +8,7 @@ export const addNewPlaylist = async (playlist: Playlist): Promise<void> => {
 
     await addPlaylist(playlist);
     for (const song of playlist.songs) {
-        if (await songExists(song)) {
+        if (await songExists(song.id)) {
             await addSongToPlaylist(playlist, song);
             continue;
         }

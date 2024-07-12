@@ -21,7 +21,19 @@ export const downloadSongs = async (): Promise<void> => {
     for (let i = 0; i < missingSongs.length; i++) {
         const song = missingSongs[i];
         console.log(`Downloading songs (${i + 1}/${missingSongs.length})`);
-        const filename = await downloadSong(song);
+        let filename = null;
+        for (let attempt = 0; attempt < 3; attempt++) {
+            try {
+                filename = await downloadSong(song);
+                break;
+            } catch (e) {
+                console.warn(e);
+            }
+        }
+        if (filename === null) {
+            console.warn(`Failed to download song ${song.ytTitle}`);
+            continue;
+        }
 
         const updatedSong: Song = {
             ...structuredClone(song),

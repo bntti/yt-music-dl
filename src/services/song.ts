@@ -35,7 +35,7 @@ export const downloadSong = async (song: Song): Promise<string> => {
 
     for (const pl of playlists) {
         console.log(`Copying existing song file ${dlSong.filename}`);
-        await copySong(playlist, pl, song);
+        await copySong(playlist, pl, dlSong);
     }
 
     return filename;
@@ -66,7 +66,7 @@ export const addSongToPlaylist = async (playlist: Playlist, song: Song): Promise
     console.log(`Copying existing song file ${existingSong.filename}`);
     const playlists = (await getSongPlaylists(song)).filter((pl) => pl.id !== playlist.id);
     assert(playlists.length > 0);
-    await copySong(playlists[0], playlist, song);
+    await copySong(playlists[0], playlist, existingSong);
 };
 
 /** Remove song from playlist and delete the file and the song object if necessary */

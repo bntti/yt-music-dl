@@ -42,7 +42,7 @@ const checkNewSongs = async (youtubePlaylists: Playlist[]): Promise<void> => {
         for (const song of pl.songs) {
             if (songIds.has(song.id)) continue;
 
-            if (!(await songExists(song))) await addSong(pl, song);
+            if (!(await songExists(song.id))) await addSong(pl, song);
             else if (!(await playlistContainsSong(pl.id, song.id))) await addSongToPlaylist(pl, song);
             else throw new Error('Shouldnt happen');
         }
@@ -55,7 +55,8 @@ const chekcRemovedSongs = async (youtubePlaylists: Playlist[]): Promise<void> =>
 
     for (const pl of localPlaylists) {
         const youtubePlaylist = youtubePlaylists.find((ypl) => ypl.id === pl.id);
-        const songIds = new Set(youtubePlaylist!.songs.map((song) => song.id));
+        if (youtubePlaylist === undefined) continue;
+        const songIds = new Set(youtubePlaylist.songs.map((song) => song.id));
 
         for (const song of pl.songs) {
             if (songIds.has(song.id)) continue;

@@ -88,8 +88,8 @@ export const songFilenameExists = async (filename: string): Promise<boolean> => 
     return count > 0;
 };
 
-export const songExists = async (song: Song): Promise<boolean> => {
-    const count = await prisma.song.count({ where: { id: song.id } });
+export const songExists = async (id: string): Promise<boolean> => {
+    const count = await prisma.song.count({ where: { id } });
     return count > 0;
 };
 

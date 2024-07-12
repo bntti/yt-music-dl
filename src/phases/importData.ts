@@ -2,7 +2,7 @@ import * as fs from 'fs/promises';
 import assert from 'node:assert/strict';
 import path from 'path';
 
-import { getSong, getSongFilename } from '../repository';
+import { getSong, getSongFilename, songExists } from '../repository';
 import { renameSong, shortenString } from '../services';
 import { ExportSchema } from '../types';
 
@@ -28,6 +28,11 @@ export const importData = async (): Promise<void> => {
     }
 
     for (const exportSong of result.data) {
+        if (!(await songExists(exportSong.id))) {
+            console.warn(`Song ${exportSong.title} not found`);
+            continue;
+        }
+
         const song = await getSong(exportSong.id);
         assert(song.downloaded);
 

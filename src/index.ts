@@ -13,6 +13,7 @@ const main = async (): Promise<void> => {
             `
 ------------------------------
 Songs in total    | ${nums.songs}
+Songs to download | ${nums.songs - nums.downloaded}
 Songs to rename   | ${nums.downloaded - nums.renamed}
 
 What do you want to do?
