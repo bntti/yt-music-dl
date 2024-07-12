@@ -15,6 +15,16 @@ export const getNotDownloadedSongs = async (): Promise<Song[]> => {
     return SongArraySchema.parse(songs);
 };
 
+export const getSongsToRename = async (): Promise<Song[]> => {
+    const songs = await prisma.song.findMany({ where: { downloaded: true, renamed: false } });
+    return SongArraySchema.parse(songs);
+};
+
+export const getRenamedSongs = async (): Promise<Song[]> => {
+    const songs = await prisma.song.findMany({ where: { renamed: true } });
+    return SongArraySchema.parse(songs);
+};
+
 export const getOrphans = async (): Promise<Song[]> => {
     const orphans = await prisma.song.findMany({
         where: { playlists: { none: {} } },
@@ -96,13 +106,14 @@ export const updateSongImageUrl = async (id: string, imageUrl: string): Promise<
 };
 
 export const setSongAsRenamed = async (
-    id: string,
+    song: Song,
     artist: string,
     title: string,
     newFilename: string,
 ): Promise<void> => {
+    assert(song.downloaded);
     await prisma.song.update({
-        where: { id },
+        where: { id: song.id },
         data: {
             renamed: true,
             artist: artist,
@@ -113,13 +124,10 @@ export const setSongAsRenamed = async (
 };
 
 export const exportRenamedSongs = async (): Promise<{ id: string; artist: string; title: string }[]> => {
-    const dbRenamedSongs = await prisma.song.findMany({
-        where: { renamed: true },
-        select: { id: true, artist: true, title: true },
-    });
+    const dbRenamedSongs = await getRenamedSongs();
     const renamedSongs = SongArraySchema.parse(dbRenamedSongs);
     return renamedSongs.map((song) => {
-        assert(song.downloaded && song.renamed); // Always true
+        assert(song.renamed); // Always true
         return {
             id: song.id,
             artist: song.artist,

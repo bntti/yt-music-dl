@@ -5,5 +5,6 @@ prisma/dev.db
 prisma/dev.db-journal
 songs
 config.json
+export.json
 
 .vscode

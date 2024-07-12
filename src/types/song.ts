@@ -21,7 +21,7 @@ export const SongSchema = z.union([
     SongBaseSchema.extend({
         downloaded: z.literal(true),
         filename: z.string(),
-        imageUrl: z.string().url(),
+        imageUrl: z.string().url().nullable(),
         renamed: z.literal(true),
         artist: z.string(),
         title: z.string(),

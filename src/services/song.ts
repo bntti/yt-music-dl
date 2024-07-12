@@ -14,6 +14,8 @@ import {
     updateSongMetadata,
     songHasPlaylist,
     removeSong,
+    setSongAsRenamed,
+    renameSongFile,
 } from '../repository';
 import { Playlist, Song } from '../types';
 
@@ -48,7 +50,8 @@ export const renameSong = async (song: Song, artist: string, title: string): Pro
     const newFilename = await getSongFilename(oldFilename, artist, title, true);
 
     console.log(`Renaming song ${oldFilename} to ${newFilename}`);
-    await setSongAsDownloaded(song, newFilename);
+    await renameSongFile(playlists, song, newFilename);
+    await setSongAsRenamed(song, artist, title, newFilename);
     await updateSongMetadata(playlists, song, artist, title, newFilename);
 };
 

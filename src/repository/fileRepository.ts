@@ -6,7 +6,7 @@ import path from 'path';
 import sanitize from 'sanitize-filename';
 import sharp from 'sharp';
 
-import { songFilenameExists, playlistDirExists } from '.';
+import { songFilenameExists, playlistDirExists, updateSongImageUrl } from '.';
 import { SONG_DIR, SONG_EXT, TARGET_DBFS } from '../config';
 import { Playlist, Song } from '../types';
 
@@ -40,7 +40,7 @@ export const getSongPath = (playlist: Playlist, song: Song): string => {
 };
 
 /** Rename song to new filename */
-export const renameSong = async (playlists: Playlist[], song: Song, newFilename: string): Promise<void> => {
+export const renameSongFile = async (playlists: Playlist[], song: Song, newFilename: string): Promise<void> => {
     assert(song.downloaded);
     const updatedSong: Song = { ...structuredClone(song), filename: newFilename };
 
@@ -118,6 +118,7 @@ export const writeCoverImages = async (playlist: Playlist): Promise<void> => {
         };
 
         await nodeID3.Promise.write(tags, filepath);
+        await updateSongImageUrl(song.id, playlist.imageUrl);
     }
 };
 

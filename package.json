@@ -17,6 +17,7 @@
         "@tsconfig/node22": "^22.0.0",
         "@types/node-fetch": "^2.6.6",
         "@types/prompt-sync": "^4.2.3",
+        "@types/string-similarity": "^4.0.2",
         "@typescript-eslint/eslint-plugin": "^7.16.0",
         "@typescript-eslint/parser": "^7.16.0",
         "eslint-config-google": "^0.14.0",
@@ -37,6 +38,7 @@
         "prompt-sync": "^4.2.0",
         "sanitize-filename": "^1.6.3",
         "sharp": "^0.33.4",
+        "string-similarity": "^4.0.4",
         "zod": "^3.22.2"
     }
 }
