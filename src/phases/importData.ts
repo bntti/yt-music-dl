@@ -2,13 +2,14 @@ import * as fs from 'fs/promises';
 import assert from 'node:assert/strict';
 import path from 'path';
 
+import { PROJECT_ROOT } from '../config';
 import { getSong, getSongFilename, songExists } from '../repository';
 import { renameSong, shortenString } from '../services';
 import { ExportSchema } from '../types';
 
 export const importData = async (): Promise<void> => {
     console.log('Importing song renaming data');
-    const exportFile = path.join(__dirname, '..', '..', 'export.json');
+    const exportFile = path.join(PROJECT_ROOT, 'export.json');
     const data = await fs.readFile(exportFile);
 
     // Parse json

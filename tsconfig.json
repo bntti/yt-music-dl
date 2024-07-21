@@ -1,11 +1,20 @@
 {
     "extends": "@tsconfig/node22/tsconfig.json",
     "compilerOptions": {
-        "sourceMap": true,
-        "outDir": "dist",
         "baseUrl": "src",
+        "outDir": "dist",
         "noImplicitAny": true,
-        "resolveJsonModule": true
+        "experimentalDecorators": true,
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
+        "target": "ESNext",
+        "noEmit": true,
+        "allowImportingTsExtensions": true,
+        "allowArbitraryExtensions": false,
+        "paths": {
+            // Using @/asdf instead of @asdf as the latter conflicts with npm scoped packages.
+            "@/*": ["*"] // This effectively makes @ a path alias for project src root.
+        }
     },
     "include": ["src/**/*"],
     "exclude": []

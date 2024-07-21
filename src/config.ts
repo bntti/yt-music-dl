@@ -1,16 +1,19 @@
 import * as fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 import { Config, ConfigSchema } from './types';
 
+export const PROJECT_ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
+
 const readConfig = (): Config => {
-    const configFile = path.join(__dirname, '..', 'config.json');
+    const configFile = path.join(PROJECT_ROOT, 'config.json');
     let rawConfig;
     try {
         rawConfig = fs.readFileSync(configFile);
     } catch (e) {
         if (e instanceof Error && 'code' in e && e.code === 'ENOENT') {
-            const exampleFile = path.join(__dirname, '..', 'config.json.example');
+            const exampleFile = path.join(PROJECT_ROOT, 'config.json.example');
             fs.copyFileSync(exampleFile, configFile);
 
             console.log('Created config.json file.');
@@ -37,6 +40,7 @@ const readConfig = (): Config => {
 };
 
 const config = readConfig();
+
 export const SONG_DIR = config.song_dir;
 export const SONG_EXT = config.song_ext;
 export const TARGET_DBFS = config.DBFS;

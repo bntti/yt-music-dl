@@ -54,4 +54,4 @@ What do you want to do?
     }
 };
 
-if (require.main === module) main().catch(console.error);
+main().catch(console.error);
