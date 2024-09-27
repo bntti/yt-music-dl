@@ -1,20 +1,20 @@
 import prompt from 'prompt-sync';
 
-import { checkPlaylists, downloadSongs, renameSongs, checkSimilarArtists, exportData, importData } from './phases';
-import { getNums } from './repository';
+import { checkPlaylists, checkSimilarArtists, downloadSongs, exportData, importData, renameSongs } from './phases';
+import { getSongData as getSongData } from './repository';
 
 const input = prompt();
 
 const main = async (): Promise<void> => {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     while (true) {
-        const nums = await getNums();
+        const songData = await getSongData();
         console.log(
             `
 ------------------------------
-Songs in total    | ${nums.songs}
-Songs to download | ${nums.songs - nums.downloaded}
-Songs to rename   | ${nums.downloaded - nums.renamed}
+Songs in total    | ${songData.numSongs}
+Songs to download | ${songData.numSongs - songData.numDownloaded}
+Songs to rename   | ${songData.numDownloaded - songData.numRenamed}
 
 What do you want to do?
     u | update playlists

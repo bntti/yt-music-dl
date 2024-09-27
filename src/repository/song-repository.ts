@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import assert from 'node:assert/strict';
 
-import { Playlist, Song, SongArraySchema, SongSchema } from '../types';
+import { type Playlist, type Song, SongArraySchema, SongSchema } from '../types';
 
 const prisma = new PrismaClient();
 
@@ -38,18 +38,18 @@ export const getSong = async (id: string): Promise<Song> => {
 };
 
 /** Returns number of songs, downloaded songs and renamed songs */
-export const getNums = async (): Promise<{ songs: number; downloaded: number; renamed: number }> => {
-    const songCount = await prisma.song.count();
+export const getSongData = async (): Promise<{ numSongs: number; numDownloaded: number; numRenamed: number }> => {
+    const numSongs = await prisma.song.count();
 
-    const downloadedCount = await prisma.song.count({
+    const numDownloaded = await prisma.song.count({
         where: { downloaded: true },
     });
 
-    const renamedCount = await prisma.song.count({
+    const numRenamed = await prisma.song.count({
         where: { downloaded: true, renamed: true },
     });
 
-    return { songs: songCount, downloaded: downloadedCount, renamed: renamedCount };
+    return { numSongs, numDownloaded, numRenamed };
 };
 
 export const addSong = async (playlist: Playlist, song: Song): Promise<void> => {

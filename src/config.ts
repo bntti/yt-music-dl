@@ -1,8 +1,8 @@
-import * as fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import * as fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-import { Config, ConfigSchema } from './types';
+import { type Config, ConfigSchema } from './types';
 
 export const PROJECT_ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -11,23 +11,23 @@ const readConfig = (): Config => {
     let rawConfig;
     try {
         rawConfig = fs.readFileSync(configFile);
-    } catch (e) {
-        if (e instanceof Error && 'code' in e && e.code === 'ENOENT') {
+    } catch (error) {
+        if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
             const exampleFile = path.join(PROJECT_ROOT, 'config.json.example');
             fs.copyFileSync(exampleFile, configFile);
 
             console.log('Created config.json file.');
             process.exit();
         }
-        console.error('Unknown error while reading config.json\n' + String(e));
+        console.error('Unknown error while reading config.json\n' + String(error));
         process.exit();
     }
 
     let result;
     try {
         result = ConfigSchema.safeParse(JSON.parse(rawConfig.toString()));
-    } catch (e) {
-        console.error('Unable to parse config.json\n' + String(e));
+    } catch (error) {
+        console.error('Unable to parse config.json\n' + String(error));
         process.exit();
     }
 

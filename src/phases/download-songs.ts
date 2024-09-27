@@ -6,7 +6,7 @@ import {
     writeSongMetadata,
 } from '../repository';
 import { downloadSong } from '../services';
-import { Song } from '../types';
+import type { Song } from '../types';
 
 /** Download songs that have not been downloaded yet and write some metadata to them */
 export const downloadSongs = async (): Promise<void> => {
@@ -26,8 +26,8 @@ export const downloadSongs = async (): Promise<void> => {
             try {
                 filename = await downloadSong(song);
                 break;
-            } catch (e) {
-                console.warn(e);
+            } catch (error) {
+                console.warn(error);
             }
         }
         if (filename === null) {

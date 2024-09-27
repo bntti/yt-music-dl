@@ -1,6 +1,6 @@
 import { addSongToPlaylist } from '.';
 import { addPlaylist, addSong, deletePlaylistDir, deleteSongFile, removePlaylist, songExists } from '../repository';
-import { Playlist } from '../types';
+import type { Playlist } from '../types';
 
 /** Adds new playlist and its songs to the db copying existing song files */
 export const addNewPlaylist = async (playlist: Playlist): Promise<void> => {

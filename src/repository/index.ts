@@ -1,3 +1,3 @@
-export * from './fileRepository';
-export * from './playlistRepository';
-export * from './songRepository';
+export * from './file-repository';
+export * from './playlist-repository';
+export * from './song-repository';

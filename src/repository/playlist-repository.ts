@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-import { Playlist, PlaylistArraySchema, PlaylistSchema, Song } from '../types';
+import { type Playlist, PlaylistArraySchema, PlaylistSchema, type Song } from '../types';
 
 const prisma = new PrismaClient();
 

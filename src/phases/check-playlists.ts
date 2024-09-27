@@ -9,15 +9,15 @@ import {
     removeSongFromPlaylist,
     ytGetPlaylistData,
 } from '../services';
-import { Playlist } from '../types';
+import type { Playlist } from '../types';
 
 /** Check for new playlists */
 const checkNewPlaylists = async (youtubePlaylists: Playlist[]): Promise<void> => {
     const localPlaylists = await getPlaylists();
 
-    const localIds = localPlaylists.map((pl) => pl.id);
+    const localIds = new Set(localPlaylists.map((pl) => pl.id));
     for (const pl of youtubePlaylists) {
-        if (!localIds.includes(pl.id)) await addNewPlaylist(pl);
+        if (!localIds.has(pl.id)) await addNewPlaylist(pl);
     }
 };
 
@@ -25,9 +25,9 @@ const checkNewPlaylists = async (youtubePlaylists: Playlist[]): Promise<void> =>
 const checkRemovedPlaylists = async (youtubePlaylists: Playlist[]): Promise<void> => {
     const localPlaylists = await getPlaylists();
 
-    const youtubeIds = youtubePlaylists.map((pl) => pl.id);
+    const youtubeIds = new Set(youtubePlaylists.map((pl) => pl.id));
     for (const pl of localPlaylists) {
-        if (!youtubeIds.includes(pl.id)) await deletePlaylist(pl);
+        if (!youtubeIds.has(pl.id)) await deletePlaylist(pl);
     }
 };
 
@@ -36,21 +36,21 @@ const checkNewSongs = async (youtubePlaylists: Playlist[]): Promise<void> => {
     const localPlaylists = await getPlaylists();
 
     for (const pl of youtubePlaylists) {
-        const localPlaylist = localPlaylists.find((lpl) => lpl.id === pl.id);
-        const songIds = new Set(localPlaylist!.songs.map((song) => song.id));
+        const localPlaylist = localPlaylists.find((lpl) => lpl.id === pl.id) as Playlist;
+        const songIds = new Set(localPlaylist.songs.map((song) => song.id));
 
         for (const song of pl.songs) {
             if (songIds.has(song.id)) continue;
 
             if (!(await songExists(song.id))) await addSong(pl, song);
             else if (!(await playlistContainsSong(pl.id, song.id))) await addSongToPlaylist(pl, song);
-            else throw new Error('Shouldnt happen');
+            else throw new Error("Shouldn't happen");
         }
     }
 };
 
 /** Check for removed songs */
-const chekcRemovedSongs = async (youtubePlaylists: Playlist[]): Promise<void> => {
+const checkRemovedSongs = async (youtubePlaylists: Playlist[]): Promise<void> => {
     const localPlaylists = await getPlaylists();
 
     for (const pl of localPlaylists) {
@@ -76,15 +76,15 @@ export const checkPlaylists = async (): Promise<void> => {
         try {
             const playlistData = await ytGetPlaylistData(PLAYLIST_URLS[i]); // Might throw
             youtubePlaylists.push(playlistData);
-        } catch (e) {
-            assert(e instanceof Error);
-            console.warn('Failed to download playlist data\n' + `${PLAYLIST_URLS[i]}\n` + e.message);
+        } catch (error) {
+            assert(error instanceof Error);
+            console.warn('Failed to download playlist data\n' + `${PLAYLIST_URLS[i]}\n` + error.message);
             return;
         }
     }
     // First check new and then removed to be able to copy over the song files before removing them.
     await checkNewPlaylists(youtubePlaylists);
     await checkNewSongs(youtubePlaylists);
-    await chekcRemovedSongs(youtubePlaylists);
+    await checkRemovedSongs(youtubePlaylists);
     await checkRemovedPlaylists(youtubePlaylists);
 };

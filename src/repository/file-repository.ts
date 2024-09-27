@@ -1,14 +1,14 @@
-import { spawn } from 'child_process';
-import * as fs from 'fs/promises';
 import nodeID3 from 'node-id3';
 import assert from 'node:assert/strict';
-import path from 'path';
+import { spawn } from 'node:child_process';
+import * as fs from 'node:fs/promises';
+import path from 'node:path';
 import sanitize from 'sanitize-filename';
 import sharp from 'sharp';
 
-import { songFilenameExists, playlistDirExists, updateSongImageUrl } from '.';
+import { playlistDirExists, songFilenameExists, updateSongImageUrl } from '.';
 import { SONG_DIR, SONG_EXT, TARGET_DBFS } from '../config';
-import { Playlist, Song } from '../types';
+import type { Playlist, Song } from '../types';
 
 export const sanitizeFilename = (filename: string): string => {
     return sanitize(filename);

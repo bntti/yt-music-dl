@@ -1,6 +1,6 @@
-import * as fs from 'fs/promises';
 import assert from 'node:assert/strict';
-import path from 'path';
+import * as fs from 'node:fs/promises';
+import path from 'node:path';
 
 import { PROJECT_ROOT } from '../config';
 import { getSong, getSongFilename, songExists } from '../repository';
@@ -16,9 +16,9 @@ export const importData = async (): Promise<void> => {
     let result;
     try {
         result = ExportSchema.safeParse(JSON.parse(data.toString()));
-    } catch (e) {
-        assert(e instanceof SyntaxError);
-        throw new Error('Failed to parse export.json\n' + `${shortenString(data.toString())}\n` + e.message);
+    } catch (error) {
+        assert(error instanceof SyntaxError);
+        throw new Error('Failed to parse export.json\n' + `${shortenString(data.toString())}\n` + error.message);
     }
 
     // Validate json

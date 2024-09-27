@@ -1,11 +1,11 @@
-import { spawn } from 'child_process';
 import assert from 'node:assert/strict';
-import path from 'path';
+import { spawn } from 'node:child_process';
+import path from 'node:path';
 
 import { shortenString } from '.';
 import { SONG_DIR } from '../config';
 import { createPlaylistFolder, sanitizeFilename } from '../repository';
-import { Playlist, Song, YTPlaylistSchema, YtSongSchema } from '../types';
+import { type Playlist, type Song, YTPlaylistSchema, YtSongSchema } from '../types';
 
 /** Get song data json using yt-dlp */
 const ytDlpGetSongData = async (url: string): Promise<string> =>
@@ -22,7 +22,7 @@ const ytDlpGetSongData = async (url: string): Promise<string> =>
         });
 
         ytDl.on('close', (code) => {
-            if (code !== 0) reject(error.join(''));
+            if (code !== 0) reject(new Error(error.join('') || '[No errors]'));
             else resolve(stdout.join(''));
         });
     });
@@ -42,7 +42,7 @@ const ytDlpGetPlaylistData = async (url: string): Promise<string> =>
         });
 
         ytDl.on('close', (code) => {
-            if (code !== 0) reject(error.join(''));
+            if (code !== 0) reject(new Error(error.join('') || '[No errors]'));
             else resolve(stdout.join(''));
         });
     });
@@ -74,7 +74,7 @@ const ytDlpDownloadSong = async (dirPath: string, song: Song): Promise<string> =
         });
 
         ytDl.on('close', (code) => {
-            if (code !== 0) reject(error.join(''));
+            if (code !== 0) reject(new Error(error.join('') || '[No errors]'));
             else resolve(stdout.join(''));
         });
     });
@@ -90,9 +90,11 @@ export const ytGetSongThumbnailUrl = async (url: string): Promise<string | null>
     let result;
     try {
         result = YtSongSchema.safeParse(JSON.parse(rawSongData));
-    } catch (e) {
-        assert(e instanceof SyntaxError);
-        throw new Error('Failed to parse youtube song json response\n' + `${shortenString(rawSongData)}\n` + e.message);
+    } catch (error) {
+        assert(error instanceof SyntaxError);
+        throw new Error(
+            'Failed to parse youtube song json response\n' + `${shortenString(rawSongData)}\n` + error.message,
+        );
     }
 
     // Validate json
@@ -118,10 +120,10 @@ export const ytGetPlaylistData = async (url: string): Promise<Playlist> => {
     let result;
     try {
         result = YTPlaylistSchema.safeParse(JSON.parse(rawPlaylistData));
-    } catch (e) {
-        assert(e instanceof SyntaxError);
+    } catch (error) {
+        assert(error instanceof SyntaxError);
         throw new Error(
-            'Failed to parse youtube playlist json response\n' + `${shortenString(rawPlaylistData)}\n` + e.message,
+            'Failed to parse youtube playlist json response\n' + `${shortenString(rawPlaylistData)}\n` + error.message,
         );
     }
 

@@ -1,23 +1,23 @@
 import assert from 'node:assert/strict';
 
-import { ytDownloadSong } from './ytDlp';
+import { ytDownloadSong } from './yt-dlp';
 import {
     copySong,
     dbAddSongToPlaylist,
     dbRemoveSongFromPlaylist,
     deleteSongFile,
-    getSongPlaylists,
     getSong,
     getSongFilename,
+    getSongPlaylists,
     normalizeAndConvertSongToCorrectFormat,
-    setSongAsDownloaded,
-    updateSongMetadata,
-    songHasPlaylist,
     removeSong,
-    setSongAsRenamed,
     renameSongFile,
+    setSongAsDownloaded,
+    setSongAsRenamed,
+    songHasPlaylist,
+    updateSongMetadata,
 } from '../repository';
-import { Playlist, Song } from '../types';
+import type { Playlist, Song } from '../types';
 
 /** Download song, convert downloaded file to the correct format, and set it as downloaded. Returns the filename */
 export const downloadSong = async (song: Song): Promise<string> => {
@@ -25,7 +25,7 @@ export const downloadSong = async (song: Song): Promise<string> => {
 
     const playlists = await getSongPlaylists(song);
     assert(playlists.length > 0);
-    const playlist = playlists.pop()!;
+    const playlist = playlists.pop() as Playlist;
 
     const path = await ytDownloadSong(playlist, song);
     console.log('Normalizing the song and converting it to the correct format');
