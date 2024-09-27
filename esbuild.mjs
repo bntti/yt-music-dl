@@ -5,6 +5,7 @@ build({
     entryPoints: ['./src/index.ts'],
     format: 'esm',
     minify: true,
+    outExtension: { '.js': '.mjs' },
     outdir: './dist',
     packages: 'external',
     platform: 'node',
