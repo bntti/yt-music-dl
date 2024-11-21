@@ -16,6 +16,7 @@ Metadata written:
 -   ffmpeg
 -   yt-dlp
 -   npm >= 22
+-   mp3gain
 
 ### Initialization
 

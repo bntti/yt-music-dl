@@ -7,12 +7,10 @@ import sanitize from 'sanitize-filename';
 import sharp from 'sharp';
 
 import { playlistDirExists, songFilenameExists, updateSongImageUrl } from '.';
-import { SONG_DIR, SONG_EXT, TARGET_DBFS } from '../config';
+import { SONG_DIR, SONG_EXT } from '../config';
 import type { Playlist, Song } from '../types';
 
-export const sanitizeFilename = (filename: string): string => {
-    return sanitize(filename);
-};
+export const sanitizeFilename = (filename: string): string => sanitize(filename);
 
 export const getSongFilename = async (
     oldFilename: string | null,
@@ -74,14 +72,6 @@ const generateSquareImage = async (inputImage: Buffer): Promise<Buffer> => {
         .resize(maxSize, maxSize, { fit: 'cover' })
         .blur(20) // Adjust the blur amount as needed
         .toBuffer();
-
-    // // Resize the original image to fit within the square while maintaining its aspect ratio
-    // const resizedImage = await image
-    //     .resize(maxSize, maxSize, {
-    //         fit: 'inside',
-    //         background: { r: 0, g: 0, b: 0, alpha: 0 }, // Transparent background if the image doesn't fit exactly
-    //     })
-    //     .toBuffer();
 
     // Composite the original image on top of the blurred background
     const finalImage = await sharp(blurredBackground)
@@ -162,36 +152,28 @@ export const updateSongMetadata = async (
     }
 };
 
-/** Normalize audio and re-encode using ffmpeg */
-const ffmpegNormalize = async (inputPath: string, outputPath: string): Promise<void> => {
-    // Construct the ffmpeg arguments for normalization
-    const args = [
-        '-i',
-        inputPath,
-        '-af',
-        `loudnorm=I=${TARGET_DBFS}`, // Applies the loudnorm filter
-        // '-ar', '44100', // Sets the audio sampling rate to 44100 Hz
-        '-y', // Overwrite output file if it exists
-        outputPath,
-    ];
+/** Re-encode using ffmpeg */
+const reEncode = async (inputPath: string, outputPath: string): Promise<void> => {
+    const args = ['-i', inputPath, '-y', outputPath];
 
     return new Promise((resolve, reject) => {
         const ffmpeg = spawn('ffmpeg', args);
-
-        // ffmpeg.stdout.on('data', (data) => {
-        //     console.log(`stdout: ${data}`);
-        // });
-
-        // ffmpeg.stderr.on('data', (data) => {
-        //     console.error(`stderr: ${data}`);
-        // });
-
         ffmpeg.on('close', (code) => {
-            if (code === 0) {
-                resolve();
-            } else {
-                reject(new Error(`ffmpeg process exited with code ${code}`));
-            }
+            if (code === 0) resolve();
+            else reject(new Error(`ffmpeg process exited with code ${code}`));
+        });
+    });
+};
+
+/** Normalize using mp3gain */
+const normalize = async (filePath: string): Promise<void> => {
+    const args = ['-r', filePath];
+
+    return new Promise((resolve, reject) => {
+        const mp3gain = spawn('mp3gain', args);
+        mp3gain.on('close', (code) => {
+            if (code === 0) resolve();
+            else reject(new Error(`mp3gain process exited with code ${code}`));
         });
     });
 };
@@ -201,7 +183,8 @@ export const normalizeAndConvertSongToCorrectFormat = async (songPath: string): 
     const { dir: basePath, name: filename } = path.parse(songPath);
     const newPath = path.join(basePath, `${filename}${SONG_EXT}`);
 
-    await ffmpegNormalize(songPath, newPath);
+    await reEncode(songPath, newPath);
+    await normalize(newPath);
     await fs.rm(songPath);
 
     return filename;
