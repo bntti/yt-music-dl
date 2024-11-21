@@ -15,32 +15,33 @@ Metadata written:
 
 -   ffmpeg
 -   yt-dlp
--   npm >= 22
+-   node >= 22
+-   yarn
 -   mp3gain
 
 ### Initialization
 
 1. Install dependencies
     ```
-    npm i
+    yarn i
     ```
 2. Init database
     ```
-    npm run init
+    yarn run init
     ```
 3. Build the project
     ```
-    npm run build
+    yarn build
     ```
 4. Run once to create config.json
     ```
-    npm start
+    yarn start
     ```
 
 ### Running the program
 
 ```
-npm start
+yarn start
 ```
 
 ### Usage
