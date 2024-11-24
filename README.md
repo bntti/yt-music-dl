@@ -63,5 +63,4 @@ The program is configured by editing `config.json`. This file is generated when 
 | --------------- | ---------------------------------------------------------- |
 | `song_dir`      | Directory to download the songs to                         |
 | `song_ext`      | Target song extension. Only tested value currently is .mp3 |
-| `DBFS`          | Target dBFS to normalize songs to                          |
 | `playlist_urls` | List of the URLs of the playlists                          |

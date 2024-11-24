@@ -1,7 +1,6 @@
 {
     "song_dir": "songs", // Directory to download the songs to
     "song_ext": ".mp3",  // Target song extension. Only tested value currently is .mp3
-    "DBFS": -20,         // Target normalization DBFS
     "playlist_urls": [
         // Put your playlist urls here
     ]

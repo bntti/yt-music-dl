@@ -43,5 +43,4 @@ const config = readConfig();
 
 export const SONG_DIR = config.song_dir;
 export const SONG_EXT = config.song_ext;
-export const TARGET_DBFS = config.DBFS;
 export const PLAYLIST_URLS = config.playlist_urls;
