@@ -54,7 +54,7 @@ const ytDlpDownloadSong = async (dirPath: string, song: Song): Promise<string> =
             '-f',
             'bestaudio',
             '-o',
-            '%(title)s.%(ext)s',
+            '%(title)U.%(ext)s',
             '-P',
             dirPath,
             '--print',
