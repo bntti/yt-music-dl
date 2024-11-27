@@ -15,7 +15,6 @@
     },
     "dependencies": {
         "@prisma/client": "^5.16.2",
-        "node-fetch": "^2.7.0",
         "node-id3": "^0.2.6",
         "prompt-sync": "^4.2.0",
         "sanitize-filename": "^1.6.3",
@@ -27,7 +26,6 @@
         "@eslint/compat": "^1.1.1",
         "@eslint/js": "^9.9.0",
         "@types/node": "^22.5.0",
-        "@types/node-fetch": "^2.6.6",
         "@types/prompt-sync": "^4.2.3",
         "@types/string-similarity": "^4.0.2",
         "esbuild": "^0.24.0",
