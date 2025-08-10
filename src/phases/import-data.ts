@@ -17,14 +17,14 @@ export const importData = async (): Promise<void> => {
     try {
         result = ExportSchema.safeParse(JSON.parse(data.toString()));
     } catch (error) {
-        assert(error instanceof SyntaxError);
+        assert.ok(error instanceof SyntaxError);
         throw new Error('Failed to parse export.json\n' + `${shortenString(data.toString())}\n` + error.message);
     }
 
     // Validate json
     if (!result.success) {
         throw new Error(
-            'Failed to validate export.json\n' + `${shortenString(data.toString())}\n` + result.error.toString(),
+            'Failed to validate export.json\n' + `${shortenString(data.toString())}\n` + JSON.stringify(result.error),
         );
     }
 
@@ -35,7 +35,7 @@ export const importData = async (): Promise<void> => {
         }
 
         const song = await getSong(exportSong.id);
-        assert(song.downloaded);
+        assert.ok(song.downloaded);
 
         const newFilename = await getSongFilename(song.filename, exportSong.artist, exportSong.title, false);
         if (

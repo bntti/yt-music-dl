@@ -24,14 +24,14 @@ export const downloadSong = async (song: Song): Promise<string> => {
     console.log(`Downloading song ${song.ytTitle}`);
 
     const playlists = await getSongPlaylists(song);
-    assert(playlists.length > 0);
+    assert.ok(playlists.length > 0);
     const playlist = playlists.pop() as Playlist;
 
     const path = await ytDownloadSong(playlist, song);
     console.log('Normalizing the song and converting it to the correct format');
     const filename = await normalizeAndConvertSongToCorrectFormat(path);
     const dlSong = await setSongAsDownloaded(song, filename);
-    assert(dlSong.downloaded);
+    assert.ok(dlSong.downloaded);
 
     for (const pl of playlists) {
         console.log(`Copying existing song file ${dlSong.filename}`);
@@ -43,7 +43,7 @@ export const downloadSong = async (song: Song): Promise<string> => {
 
 /** Rename song to format artist - title and add the new data to the database */
 export const renameSong = async (song: Song, artist: string, title: string): Promise<void> => {
-    assert(song.downloaded);
+    assert.ok(song.downloaded);
 
     const playlists = await getSongPlaylists(song);
     const oldFilename = song.filename;
@@ -65,7 +65,7 @@ export const addSongToPlaylist = async (playlist: Playlist, song: Song): Promise
 
     console.log(`Copying existing song file ${existingSong.filename}`);
     const playlists = (await getSongPlaylists(song)).filter((pl) => pl.id !== playlist.id);
-    assert(playlists.length > 0);
+    assert.ok(playlists.length > 0);
     await copySong(playlists[0], playlist, existingSong);
 };
 

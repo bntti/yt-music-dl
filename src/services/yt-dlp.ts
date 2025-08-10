@@ -91,7 +91,7 @@ export const ytGetSongThumbnailUrl = async (url: string): Promise<string | null>
     try {
         result = YtSongSchema.safeParse(JSON.parse(rawSongData));
     } catch (error) {
-        assert(error instanceof SyntaxError);
+        assert.ok(error instanceof SyntaxError);
         throw new Error(
             'Failed to parse youtube song json response\n' + `${shortenString(rawSongData)}\n` + error.message,
         );
@@ -102,7 +102,7 @@ export const ytGetSongThumbnailUrl = async (url: string): Promise<string | null>
         throw new Error(
             'Failed to validate youtube song json response\n' +
                 `${shortenString(rawSongData)}\n` +
-                result.error.toString(),
+                JSON.stringify(result.error),
         );
     }
 
@@ -121,7 +121,7 @@ export const ytGetPlaylistData = async (url: string): Promise<Playlist> => {
     try {
         result = YTPlaylistSchema.safeParse(JSON.parse(rawPlaylistData));
     } catch (error) {
-        assert(error instanceof SyntaxError);
+        assert.ok(error instanceof SyntaxError);
         throw new Error(
             'Failed to parse youtube playlist json response\n' + `${shortenString(rawPlaylistData)}\n` + error.message,
         );
@@ -133,7 +133,7 @@ export const ytGetPlaylistData = async (url: string): Promise<Playlist> => {
         throw new Error(
             'Failed to validate youtube playlist json response\n' +
                 `${shortenString(rawPlaylistData)}\n` +
-                result.error.toString(),
+                JSON.stringify(result.error),
         );
     }
     const playlistData = result.data;

@@ -7,7 +7,7 @@ export const checkSimilarArtists = async (): Promise<void> => {
     const songs = await getRenamedSongs();
     const artists = new Set<string>();
     for (const song of songs) {
-        assert(song.renamed);
+        assert.ok(song.renamed);
         artists.add(song.artist);
     }
 

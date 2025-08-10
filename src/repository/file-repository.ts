@@ -33,13 +33,13 @@ export const createPlaylistFolder = async (dirName: string): Promise<void> => {
 
 /** Get path of song file */
 export const getSongPath = (playlist: Playlist, song: Song): string => {
-    assert(song.downloaded);
+    assert.ok(song.downloaded);
     return path.join(SONG_DIR, playlist.dirName, `${song.filename}${SONG_EXT}`);
 };
 
 /** Rename song to new filename */
 export const renameSongFile = async (playlists: Playlist[], song: Song, newFilename: string): Promise<void> => {
-    assert(song.downloaded);
+    assert.ok(song.downloaded);
     const updatedSong: Song = { ...structuredClone(song), filename: newFilename };
 
     for (const pl of playlists) {
@@ -51,8 +51,8 @@ export const renameSongFile = async (playlists: Playlist[], song: Song, newFilen
 
 /** Copy song to new playlist */
 export const copySong = async (oldPlaylist: Playlist, newPlaylist: Playlist, song: Song): Promise<void> => {
-    assert(oldPlaylist.id !== newPlaylist.id);
-    assert(song.downloaded);
+    assert.ok(oldPlaylist.id !== newPlaylist.id);
+    assert.ok(song.downloaded);
     const oldPath = getSongPath(oldPlaylist, song);
     const newPath = getSongPath(newPlaylist, song);
     await fs.copyFile(oldPath, newPath);
@@ -62,7 +62,7 @@ export const copySong = async (oldPlaylist: Playlist, newPlaylist: Playlist, son
 const generateSquareImage = async (inputImage: Buffer): Promise<Buffer> => {
     const image = sharp(inputImage);
     const metadata = await image.metadata();
-    assert(metadata.width && metadata.height);
+    assert.ok(metadata.width && metadata.height);
 
     if (metadata.width === metadata.height) return inputImage;
     const maxSize = Math.max(metadata.width, metadata.height);
@@ -90,11 +90,11 @@ const getSongCoverImage = async (url: string): Promise<Buffer> => {
 
 /** Write/update song cover images */
 export const writeCoverImages = async (playlist: Playlist): Promise<void> => {
-    assert(playlist.imageUrl);
+    assert.ok(playlist.imageUrl);
     const imageData = await getSongCoverImage(playlist.imageUrl);
 
     for (const song of playlist.songs) {
-        assert(song.downloaded);
+        assert.ok(song.downloaded);
         if (song.imageUrl === playlist.imageUrl) continue;
 
         const filepath = getSongPath(playlist, song);
@@ -114,7 +114,7 @@ export const writeCoverImages = async (playlist: Playlist): Promise<void> => {
 
 /** Write the song metadata */
 export const writeSongMetadata = async (playlist: Playlist, song: Song): Promise<void> => {
-    assert(song.downloaded);
+    assert.ok(song.downloaded);
 
     const filepath = getSongPath(playlist, song);
     const fileBuffer = await fs.readFile(filepath);
@@ -138,7 +138,7 @@ export const updateSongMetadata = async (
     title: string,
     newFilename: string,
 ): Promise<void> => {
-    assert(song.downloaded);
+    assert.ok(song.downloaded);
     const updatedSong: Song = { ...structuredClone(song), filename: newFilename };
 
     for (const pl of playlists) {

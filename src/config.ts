@@ -32,7 +32,7 @@ const readConfig = (): Config => {
     }
 
     if (!result.success) {
-        console.error('Invalid config.json\n' + result.error.toString());
+        console.error('Invalid config.json\n' + JSON.stringify(result.error));
         process.exit();
     }
 

@@ -111,7 +111,7 @@ export const setSongAsRenamed = async (
     title: string,
     newFilename: string,
 ): Promise<void> => {
-    assert(song.downloaded);
+    assert.ok(song.downloaded);
     await prisma.song.update({
         where: { id: song.id },
         data: {
@@ -127,7 +127,7 @@ export const exportRenamedSongs = async (): Promise<{ id: string; artist: string
     const dbRenamedSongs = await getRenamedSongs();
     const renamedSongs = SongArraySchema.parse(dbRenamedSongs);
     return renamedSongs.map((song) => {
-        assert(song.renamed); // Always true
+        assert.ok(song.renamed); // Always true
         return {
             id: song.id,
             artist: song.artist,

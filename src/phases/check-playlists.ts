@@ -77,7 +77,7 @@ export const checkPlaylists = async (): Promise<void> => {
             const playlistData = await ytGetPlaylistData(PLAYLIST_URLS[i]); // Might throw
             youtubePlaylists.push(playlistData);
         } catch (error) {
-            assert(error instanceof Error);
+            assert.ok(error instanceof Error);
             console.warn('Failed to download playlist data\n' + `${PLAYLIST_URLS[i]}\n` + error.message);
             return;
         }
