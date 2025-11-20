@@ -1,8 +1,14 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
 
+import { PrismaClient } from '../generated/client';
 import { type Playlist, PlaylistArraySchema, PlaylistSchema, type Song } from '../types';
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
+const adapter = new PrismaBetterSqlite3({
+    url: 'file:./prisma/dev.db',
+});
+
+const prisma = new PrismaClient({ adapter });
 
 export const getPlaylists = async (): Promise<Playlist[]> => {
     const playlists = await prisma.playlist.findMany({

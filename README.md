@@ -4,20 +4,20 @@ Downloads playlists from youtube, writes the song metadata and allows the user t
 
 Metadata written:
 
--   `album`, playlist title
--   `cover image`, thumbnail of first video in playlist
--   `artist`, the program tries to guess the song artist but the user can input the correct one
--   `title`, the program tries to guess the song title but the user can input the correct one
+- `album`, playlist title
+- `cover image`, thumbnail of first video in playlist
+- `artist`, the program tries to guess the song artist but the user can input the correct one
+- `title`, the program tries to guess the song title but the user can input the correct one
 
 ## Running project
 
 ### Dependencies
 
--   ffmpeg
--   yt-dlp
--   node >= 22
--   yarn
--   mp3gain
+- ffmpeg
+- yt-dlp
+- node ^24
+- yarn
+- mp3gain
 
 ### Initialization
 

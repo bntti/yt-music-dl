@@ -25,7 +25,7 @@ export default tseslint.config(
 
     // Ignores
     {
-        ignores: ['**/node_modules/**', '**/dist/**'],
+        ignores: ['**/node_modules/**', '**/dist/**', 'src/generated'],
     },
 
     // Extends ...
