@@ -170,7 +170,9 @@ const reEncode = async (inputPath: string, outputPath: string): Promise<void> =>
 
 /** Normalize using mp3gain */
 const normalize = async (filePath: string): Promise<void> => {
-    const args = ['-r', filePath];
+    // -c - ignore clipping warning when applying gain
+    // -r - apply Track gain automatically (all files set to equal loudness)
+    const args = ['-c', '-r', filePath];
 
     return new Promise((resolve, reject) => {
         const mp3gain = spawn('mp3gain', args).on('error', reject);
