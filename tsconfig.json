@@ -5,7 +5,6 @@
         "moduleResolution": "Bundler",
         "target": "ESNext",
 
-        "baseUrl": "src",
         "noEmit": true,
         "outDir": "dist",
 
