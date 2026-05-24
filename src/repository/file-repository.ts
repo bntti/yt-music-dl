@@ -157,10 +157,13 @@ const reEncode = async (inputPath: string, outputPath: string): Promise<void> =>
     const args = ['-i', inputPath, '-y', outputPath];
 
     return new Promise((resolve, reject) => {
-        const ffmpeg = spawn('ffmpeg', args);
+        const ffmpeg = spawn('ffmpeg', args).on('error', reject);
+        const stderr: string[] = [];
+
+        ffmpeg.stderr.on('data', (data: Buffer) => stderr.push(data.toString()));
         ffmpeg.on('close', (code) => {
             if (code === 0) resolve();
-            else reject(new Error(`ffmpeg process exited with code ${code}`));
+            else reject(new Error(`ffmpeg process exited with code ${code}\n` + stderr.join('')));
         });
     });
 };
@@ -170,10 +173,13 @@ const normalize = async (filePath: string): Promise<void> => {
     const args = ['-r', filePath];
 
     return new Promise((resolve, reject) => {
-        const mp3gain = spawn('mp3gain', args);
+        const mp3gain = spawn('mp3gain', args).on('error', reject);
+        const stderr: string[] = [];
+
+        mp3gain.stderr.on('data', (data: Buffer) => stderr.push(data.toString()));
         mp3gain.on('close', (code) => {
             if (code === 0) resolve();
-            else reject(new Error(`mp3gain process exited with code ${code}`));
+            else reject(new Error(`mp3gain process exited with code ${code}\n` + stderr.join('')));
         });
     });
 };
@@ -182,6 +188,7 @@ const normalize = async (filePath: string): Promise<void> => {
 export const normalizeAndConvertSongToCorrectFormat = async (songPath: string): Promise<string> => {
     const { dir: basePath, name: filename } = path.parse(songPath);
     const newPath = path.join(basePath, `${filename}${SONG_EXT}`);
+    assert.ok(songPath !== newPath);
 
     await reEncode(songPath, newPath);
     await normalize(newPath);
@@ -201,6 +208,8 @@ export const removeExtraSongFolders = async (): Promise<void> => {
 /** Delete playlist directory */
 export const deletePlaylistDir = async (playlist: Playlist): Promise<void> => {
     const playlistDir = path.join(SONG_DIR, playlist.dirName);
+    const entries = await fs.readdir(playlistDir);
+    if (entries.length > 0) throw new Error(`Cannot delete non-empty playlist directory ${playlist.dirName}`);
     await fs.rmdir(playlistDir);
 };
 

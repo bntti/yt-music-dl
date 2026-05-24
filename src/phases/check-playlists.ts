@@ -36,7 +36,8 @@ const checkNewSongs = async (youtubePlaylists: Playlist[]): Promise<void> => {
     const localPlaylists = await getPlaylists();
 
     for (const pl of youtubePlaylists) {
-        const localPlaylist = localPlaylists.find((lpl) => lpl.id === pl.id) as Playlist;
+        const localPlaylist = localPlaylists.find((lpl) => lpl.id === pl.id);
+        if (localPlaylist === undefined) throw new Error(`No local playlist for ${pl.title}`);
         const songIds = new Set(localPlaylist.songs.map((song) => song.id));
 
         for (const song of pl.songs) {
@@ -79,7 +80,7 @@ export const checkPlaylists = async (): Promise<void> => {
         } catch (error) {
             assert.ok(error instanceof Error);
             console.warn('Failed to download playlist data\n' + `${PLAYLIST_URLS[i]}\n` + error.message);
-            return;
+            continue;
         }
     }
     // First check new and then removed to be able to copy over the song files before removing them.

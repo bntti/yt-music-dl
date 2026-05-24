@@ -10,23 +10,35 @@ import { ExportSchema } from '../types';
 export const importData = async (): Promise<void> => {
     console.log('Importing song renaming data');
     const exportFile = path.join(PROJECT_ROOT, 'export.json');
-    const data = await fs.readFile(exportFile);
+
+    // Read data
+    let rawData: string;
+    try {
+        rawData = (await fs.readFile(exportFile)).toString();
+    } catch (error) {
+        if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
+            console.warn('export.json not found');
+            return;
+        }
+        throw error;
+    }
 
     // Parse json
-    let result;
+    let jsonData: JSON;
     try {
-        result = ExportSchema.safeParse(JSON.parse(data.toString()));
+        jsonData = JSON.parse(rawData) as JSON;
     } catch (error) {
         assert.ok(error instanceof SyntaxError);
-        throw new Error('Failed to parse export.json\n' + `${shortenString(data.toString())}\n` + error.message, {
+        throw new Error('Failed to parse export.json\n' + `${shortenString(rawData)}\n` + error.message, {
             cause: error,
         });
     }
 
     // Validate json
+    const result = ExportSchema.safeParse(jsonData);
     if (!result.success) {
         throw new Error(
-            'Failed to validate export.json\n' + `${shortenString(data.toString())}\n` + JSON.stringify(result.error),
+            'Failed to validate export.json\n' + `${shortenString(rawData)}\n` + JSON.stringify(result.error),
         );
     }
 
@@ -37,7 +49,7 @@ export const importData = async (): Promise<void> => {
         }
 
         const song = await getSong(exportSong.id);
-        assert.ok(song.downloaded);
+        if (!song.downloaded) continue;
 
         const newFilename = await getSongFilename(song.filename, exportSong.artist, exportSong.title, false);
         if (

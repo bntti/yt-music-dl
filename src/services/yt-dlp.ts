@@ -10,7 +10,7 @@ import { type Playlist, type Song, YTPlaylistSchema, YtSongSchema } from '../typ
 /** Get song data json using yt-dlp */
 const ytDlpGetSongData = async (url: string): Promise<string> =>
     new Promise((resolve, reject) => {
-        const ytDl = spawn('yt-dlp', ['--dump-single-json', url]);
+        const ytDl = spawn('yt-dlp', ['--dump-single-json', url]).on('error', reject);
         const error: string[] = [];
         const stdout: string[] = [];
 
@@ -30,7 +30,7 @@ const ytDlpGetSongData = async (url: string): Promise<string> =>
 /** Get playlist data json using yt-dlp */
 const ytDlpGetPlaylistData = async (url: string): Promise<string> =>
     new Promise((resolve, reject) => {
-        const ytDl = spawn('yt-dlp', ['--flat-playlist', '--dump-single-json', url]);
+        const ytDl = spawn('yt-dlp', ['--flat-playlist', '--dump-single-json', url]).on('error', reject);
         const error: string[] = [];
         const stdout: string[] = [];
 
@@ -62,7 +62,7 @@ const ytDlpDownloadSong = async (dirPath: string, song: Song): Promise<string> =
             '--no-simulate',
             song.url,
         ];
-        const ytDl = spawn('yt-dlp', flags);
+        const ytDl = spawn('yt-dlp', flags).on('error', reject);
         const error: string[] = [];
         const stdout: string[] = [];
 

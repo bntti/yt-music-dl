@@ -17,8 +17,8 @@ export const renameSongs = async (): Promise<void> => {
         let artist = song.uploader;
         let title = song.ytTitle;
         if (title.includes(' - ')) [artist, title] = title.split(' - ');
-        const inputArtist = input(`Song artist [${artist}}]: `);
-        const inputTitle = input(`Song title [${title}}]: `);
+        const inputArtist = input(`Song artist [${artist}]: `);
+        const inputTitle = input(`Song title [${title}]: `);
         artist = inputArtist || artist;
         title = inputTitle || title;
 
