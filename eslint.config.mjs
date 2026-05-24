@@ -9,6 +9,7 @@ import tseslint from 'typescript-eslint';
 
 // Inspiration taken from https://github.com/typescript-eslint/typescript-eslint/blob/main/eslint.config.mjs
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 export default tseslint.config(

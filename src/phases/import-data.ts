@@ -18,7 +18,9 @@ export const importData = async (): Promise<void> => {
         result = ExportSchema.safeParse(JSON.parse(data.toString()));
     } catch (error) {
         assert.ok(error instanceof SyntaxError);
-        throw new Error('Failed to parse export.json\n' + `${shortenString(data.toString())}\n` + error.message);
+        throw new Error('Failed to parse export.json\n' + `${shortenString(data.toString())}\n` + error.message, {
+            cause: error,
+        });
     }
 
     // Validate json

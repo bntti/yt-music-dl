@@ -94,6 +94,7 @@ export const ytGetSongThumbnailUrl = async (url: string): Promise<string | null>
         assert.ok(error instanceof SyntaxError);
         throw new Error(
             'Failed to parse youtube song json response\n' + `${shortenString(rawSongData)}\n` + error.message,
+            { cause: error },
         );
     }
 
@@ -124,6 +125,7 @@ export const ytGetPlaylistData = async (url: string): Promise<Playlist> => {
         assert.ok(error instanceof SyntaxError);
         throw new Error(
             'Failed to parse youtube playlist json response\n' + `${shortenString(rawPlaylistData)}\n` + error.message,
+            { cause: error },
         );
     }
 
